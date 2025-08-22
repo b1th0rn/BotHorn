@@ -8,10 +8,12 @@ import requests
 from config import *
 from datetime import datetime, timezone, timedelta
 
+# base config
 BOT = telebot.TeleBot(TELEGRAM_API_TOKEN)
 SUBREDDIT = SUBREDDIT_NAME
 CHAT_ID = TELEGRAM_CHAT_ID
 
+# read today's topics from subreddit
 def today_topics(subreddit):
     url = f"https://www.reddit.com/r/{subreddit}/new.json?limit=50"
     headers = {"User-Agent": "BitHornBot/0.1"}
@@ -19,9 +21,10 @@ def today_topics(subreddit):
     result = ""
     post_count = 0
     if response.status_code == 200:
-        cet = timezone(timedelta(hours=1))  # Central European Time (GMT+1)
+        cet = timezone(timedelta(hours=1))
         today = datetime.now(cet).date()
         result += f"Post del {today} su r/{subreddit}:\n\n"
+        # indentify posts from today
         for post in response.json()["data"]["children"]:
             created_utc = datetime.fromtimestamp(post["data"]["created_utc"], tz=timezone.utc)
             created_cet = created_utc.astimezone(cet)
