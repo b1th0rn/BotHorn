@@ -38,6 +38,7 @@ def today_topics(subreddit):
                 post_count += 1
     else:
         print(f"Error, response status: {response.status_code}")
+        print(response.text)
     return result, post_count
 
 result, post_count = today_topics(SUBREDDIT)
