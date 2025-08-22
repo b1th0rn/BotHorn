@@ -12,11 +12,33 @@ from datetime import datetime, timezone, timedelta
 BOT = telebot.TeleBot(TELEGRAM_API_TOKEN)
 SUBREDDIT = SUBREDDIT_NAME
 CHAT_ID = TELEGRAM_CHAT_ID
+CLIENT_ID = REDDIT_CLIENT_ID
+CLIENT_SECRET = REDDIT_CLIENT_SECRET
+
+def get_reddit_token():
+    auth = requests.auth.HTTPBasicAuth(CLIENT_ID, CLIENT_SECRET)
+    data = {
+        'grant_type': 'client_credentials'
+    }
+    headers = {'User-Agent': 'BitHornBot/0.2'}
+    response = requests.post('https://www.reddit.com/api/v1/access_token', auth=auth, data=data, headers=headers)
+    if response.status_code == 200:
+        return response.json()['access_token']
+    else:
+        print(f"Error Reddit OAuth: {response.status_code}")
+        print(response.text)
+        return None
 
 # read today's topics from subreddit
 def today_topics(subreddit):
-    url = f"https://www.reddit.com/r/{subreddit}/new.json?limit=50"
-    headers = {"User-Agent": "BitHornBot/0.2"}
+    token = get_reddit_token()
+    if not token:
+        return "Error Reddit auth.", 0
+    url = f"https://oauth.reddit.com/r/{subreddit}/new?limit=50"
+    headers = {
+        "Authorization": f"bearer {token}",
+        "User-Agent": "BitHornBot/0.2"
+    }
     response = requests.get(url, headers=headers)
     result = ""
     post_count = 0
