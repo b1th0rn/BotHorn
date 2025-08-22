@@ -34,7 +34,7 @@ def today_topics(subreddit):
             selftext = post["data"].get("selftext", "")
             preview = " ".join(selftext.split()[:10])
             if post_date == today:
-                result += f"### {title}\n {preview}...\n {link}\n\n"
+                result += f"### {title}\n{preview}...\n{link}\n\n"
                 post_count += 1
     return result, post_count
 
