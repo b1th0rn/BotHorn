@@ -16,7 +16,7 @@ CHAT_ID = TELEGRAM_CHAT_ID
 # read today's topics from subreddit
 def today_topics(subreddit):
     url = f"https://www.reddit.com/r/{subreddit}/new.json?limit=50"
-    headers = {"User-Agent": "BitHornBot/0.1"}
+    headers = {"User-Agent": "BitHornBot/0.2"}
     response = requests.get(url, headers=headers)
     result = ""
     post_count = 0
@@ -36,6 +36,8 @@ def today_topics(subreddit):
             if post_date == today:
                 result += f"### {title}\n{preview}...\n{link}\n\n"
                 post_count += 1
+    else:
+        print(f"Error, response status: {response.status_code}")
     return result, post_count
 
 result, post_count = today_topics(SUBREDDIT)
