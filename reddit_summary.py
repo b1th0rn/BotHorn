@@ -8,8 +8,7 @@ import requests
 from config import *
 from datetime import datetime, timezone, timedelta
 
-bot = telebot.TeleBot(TELEGRAM_API_TOKEN)
-
+BOT = telebot.TeleBot(TELEGRAM_API_TOKEN)
 SUBREDDIT = SUBREDDIT_NAME
 CHAT_ID = TELEGRAM_CHAT_ID
 
@@ -39,4 +38,4 @@ def today_topics(subreddit):
 result, post_count = today_topics(SUBREDDIT)
 if post_count != 0:
     message = result
-    bot.send_message(CHAT_ID, message, disable_web_page_preview=True)
+    BOT.send_message(CHAT_ID, message, disable_web_page_preview=True)
